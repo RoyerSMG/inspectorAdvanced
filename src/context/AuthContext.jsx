@@ -4,33 +4,61 @@ import { supabase } from '../lib/supabaseClient'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [session,   setSession]   = useState(undefined) // undefined = loading
-  const [operador,  setOperador]  = useState(null)
+
+  const [session, setSession] = useState(undefined)
+  const [operador, setOperador] = useState(null)
 
   const cargarOperador = async (userId, email) => {
-    const { data } = await supabase
-      .from('operadores')
-      .select('nombre')
-      .eq('id', userId)
-      .single()
-    setOperador(data?.nombre ?? email ?? 'Operador')
+
+    try {
+
+      const { data, error } = await supabase
+        .from('operadores')
+        .select('nombre')
+        .eq('id', userId)
+        .maybeSingle()
+
+      if (error) {
+        console.log(error)
+      }
+
+      setOperador(data?.nombre ?? email ?? 'Operador')
+
+    } catch (err) {
+
+      console.log(err)
+
+      setOperador(email ?? 'Operador')
+    }
   }
 
   useEffect(() => {
-    // Sesión inicial
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s)
-      if (s) cargarOperador(s.user.id, s.user.email)
-    })
 
-    // Escuchar cambios (login / logout)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+    supabase.auth.getSession()
+      .then(async ({ data: { session: s } }) => {
+
+        setSession(s)
+
+        if (s?.user) {
+          await cargarOperador(s.user.id, s.user.email)
+        }
+      })
+
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange(async (_event, s) => {
+
       setSession(s)
-      if (s) cargarOperador(s.user.id, s.user.email)
-      else   setOperador(null)
+
+      if (s?.user) {
+        await cargarOperador(s.user.id, s.user.email)
+      } else {
+        setOperador(null)
+      }
     })
 
     return () => subscription.unsubscribe()
+
   }, [])
 
   const cerrarSesion = async () => {
@@ -38,7 +66,13 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, operador, cerrarSesion }}>
+    <AuthContext.Provider
+      value={{
+        session,
+        operador,
+        cerrarSesion
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

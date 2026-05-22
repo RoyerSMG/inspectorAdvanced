@@ -26,9 +26,19 @@ export default function ResetPassword() {
       return
     }
 
-    supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
-      .then(({ error: err }) => setEstado(err ? ESTADOS.ERROR : ESTADOS.FORM))
-  }, [])
+    supabase.auth.setSession({
+  access_token: accessToken,
+  refresh_token: refreshToken
+})
+.then(async ({ error: err }) => {
+
+  if (err) {
+    setEstado(ESTADOS.ERROR)
+    return
+  }
+
+  setEstado(ESTADOS.FORM)
+})
 
   const guardarPassword = async () => {
     setError('')
@@ -191,5 +201,5 @@ export default function ResetPassword() {
 
       </div>
     </div>
-  )
-}
+  );
+})}
