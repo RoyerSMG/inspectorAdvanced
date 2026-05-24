@@ -60,8 +60,13 @@ export function AuthProvider({ children }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, s) => {
       setSession(s)
-      if (s?.user) await cargarOperador(s.user.id, s.user.email)
-      else { setOperador(null); setNecesitaRegistro(false) }
+      if (s?.user) {
+        await cargarOperador(s.user.id, s.user.email)
+      } else {
+        setOperador(null)
+        setNecesitaRegistro(false)
+        navigate('/login')        // ← redirige al hacer signOut
+      }
     })
 
     return () => subscription.unsubscribe()

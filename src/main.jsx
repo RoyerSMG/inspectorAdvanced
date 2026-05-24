@@ -14,9 +14,9 @@ import ModalRegistroOperador from './components/ModalRegistroOperador'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
       <ModalRegistroOperador />
-      <BrowserRouter>
         <Routes>
           {/* Públicas */}
           <Route path="/login"          element={<Login />} />
@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/" element={<Navigate to="/inspeccion-sede" replace />} />
           <Route path="*" element={<Navigate to="/inspeccion-sede" replace />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 )
