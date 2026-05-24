@@ -33,14 +33,14 @@ function KpiChip({ on, label }) {
   )
 }
 
-function RptImg({ src, label }) {
+function RptImg({ src, label, height = 'h-[200px]' }) {
   return (
     <div>
       {label && <div className="flex items-center gap-1.5 mb-1.5">
         <div className="w-0.5 h-3 rounded-full bg-gradient-to-b from-accent1 to-accent3" />
         <span className="text-[10px] font-bold uppercase tracking-[1.5px] text-accent1">{label}</span>
       </div>}
-      <div className="bg-[#f8faff] border border-dashed border-blue-200 rounded-lg min-h-[140px] h-[200px] flex items-center justify-center overflow-hidden mt-1">
+      <div className={`bg-[#f8faff] border border-dashed border-blue-200 rounded-lg ${height} flex items-center justify-center overflow-hidden mt-1`}>
         {src
           ? <img src={src} alt="" className="w-full h-full" />
           : <span className="text-[11px] text-gray-400 italic p-5 text-center">Imagen / Evidencia</span>}
@@ -168,7 +168,7 @@ export default function Preview({ form, control, imgs, extras, esEstandar }) {
                   </div>
                 </RptCard>
                 <RptCard title={dvrLabel}>
-                  <RptImg src={imgs.cctv} />
+                  <RptImg src={imgs.cctv} height="h-[300px]"/>
                 </RptCard>
               </>
             )}
@@ -176,14 +176,14 @@ export default function Preview({ form, control, imgs, extras, esEstandar }) {
             {/* Imagen default (otros tipos) */}
             {!esEstandar && (
               <RptCard title={form.dvrCamara ? form.dvrCamara.toUpperCase() : 'DVR — Cámara'}>
-                <RptImg src={imgs.default} />
+                <RptImg src={imgs.default} height="h-[300px]"/>
               </RptCard>
             )}
 
             {/* Extras */}
             {extras.map(ex => (
               <RptCard key={ex.id} title={ex.nombre || `Imagen ${ex.id}`}>
-                <RptImg src={ex.imagen} />
+                <RptImg src={ex.imagen} height="h-[300px]"/>
               </RptCard>
             ))}
 
