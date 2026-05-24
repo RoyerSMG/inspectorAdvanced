@@ -59,7 +59,7 @@ const initialImgs = () => ({
 })
 
 export default function InspeccionSede() {
-  const { session } = useAuth()
+  const { session, operador: operadorCtx } = useAuth()
   const { toast, mostrar } = useToast()
 
   const [form,    setForm]    = useState(initialForm())
@@ -96,6 +96,11 @@ export default function InspeccionSede() {
     if (!form.tipoId)    { mostrar('Selecciona el tipo de inspección.', 'err'); return }
     if (!form.hallazgoId){ mostrar('Selecciona un hallazgo.', 'err');           return }
 
+    if (!operadorCtx?.codigoOperador) {
+      mostrar('Tu perfil de operador no está completo.', 'err')
+      return
+    }
+
     setSaving(true)
     const { error } = await supabase.from('inspecciones_sede').insert([{
       abonado:            form.abonado    || null,
@@ -106,7 +111,7 @@ export default function InspeccionSede() {
       accion:             form.accion     || null,
       hallazgo:           parseInt(form.hallazgoId),
       observacion:        form.observacion || null,
-      operador:           session?.user?.id || null,
+      operador:           operadorCtx.codigoOperador,
     }])
     setSaving(false)
 
