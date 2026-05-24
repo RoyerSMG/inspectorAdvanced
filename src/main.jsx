@@ -10,6 +10,7 @@ import ResetPassword   from './pages/ResetPassword'
 import InspeccionSede  from './pages/InspeccionSede'
 import Seguimiento     from './pages/Seguimiento'
 import Dashboard       from './pages/Dashboard'
+import ModalRegistroOperador from './components/ModalRegistroOperador'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
