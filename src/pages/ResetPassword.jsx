@@ -14,47 +14,29 @@ export default function ResetPassword() {
   const [loading,   setLoading]   = useState(false)
 
   useEffect(() => {
-  // Supabase v2 a veces procesa el hash antes de montar el componente
-  // y otras veces después. Cubrimos ambos casos:
+  // Leer parámetros de la URL (?token_hash=...&type=...)
+  const params    = new URLSearchParams(window.location.search)
+  const tokenHash = params.get('token_hash')
+  const type      = params.get('type')
 
-  // CASO 1: Leer el hash directamente y establecer la sesión nosotros
-  const hash         = window.location.hash.substring(1)
-  const params       = new URLSearchParams(hash)
-  const accessToken  = params.get('access_token')
-  const refreshToken = params.get('refresh_token') || ''
-  const type         = params.get('type')
-
-  if (accessToken && ['invite', 'recovery', 'signup'].includes(type)) {
-    supabase.auth
-      .setSession({ access_token: accessToken, refresh_token: refreshToken })
-      .then(({ data, error: err }) => {
-        if (err || !data.session) {
-          setEstado(ESTADOS.ERROR)
-        } else {
-          // Limpiar el hash de la URL sin recargar la página
-          window.history.replaceState(null, '', window.location.pathname)
-          setEstado(ESTADOS.FORM)
-        }
-      })
+  if (!tokenHash || !['invite', 'recovery', 'signup'].includes(type)) {
+    setEstado(ESTADOS.ERROR)
     return
   }
 
-  // CASO 2: Supabase ya procesó el hash, escuchar el evento
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-      setEstado(session ? ESTADOS.FORM : ESTADOS.ERROR)
-    }
-  })
-
-  // Timeout: si en 6s no llega nada, el enlace es inválido
-  const timeout = setTimeout(() => {
-    setEstado(prev => prev === ESTADOS.LOADING ? ESTADOS.ERROR : prev)
-  }, 6000)
-
-  return () => {
-    subscription.unsubscribe()
-    clearTimeout(timeout)
-  }
+  // Verificar el token con Supabase
+  supabase.auth
+    .verifyOtp({ token_hash: tokenHash, type })
+    .then(({ data, error: err }) => {
+      if (err || !data.session) {
+        console.error('verifyOtp error:', err)
+        setEstado(ESTADOS.ERROR)
+      } else {
+        // Limpiar la URL
+        window.history.replaceState(null, '', window.location.pathname)
+        setEstado(ESTADOS.FORM)
+      }
+    })
 }, [])
 
   const guardarPassword = async () => {
