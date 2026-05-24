@@ -40,10 +40,10 @@ function RptImg({ src, label }) {
         <div className="w-0.5 h-3 rounded-full bg-gradient-to-b from-accent1 to-accent3" />
         <span className="text-[10px] font-bold uppercase tracking-[1.5px] text-accent1">{label}</span>
       </div>}
-      <div className="bg-[#f8faff] border border-dashed border-blue-200 rounded-lg min-h-[140px]
+      <div className="bg-[#f8faff] border border-dashed border-blue-200 rounded-lg min-h-[140px] h-[200px]
                       flex items-center justify-center overflow-hidden mt-1">
         {src
-          ? <img src={src} alt="" className="w-full h-full object-contain" />
+          ? <img src={src} alt="" className="w-full h-full" />
           : <span className="text-[11px] text-gray-400 italic p-5 text-center">Imagen / Evidencia</span>}
       </div>
     </div>
