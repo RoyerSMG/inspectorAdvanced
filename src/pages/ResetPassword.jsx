@@ -14,31 +14,42 @@ export default function ResetPassword() {
   const [loading,   setLoading]   = useState(false)
 
   useEffect(() => {
-  // Supabase v2 intercepta el token del hash automáticamente y dispara
-  // onAuthStateChange ANTES de que podamos leer window.location.hash.
-  // Por eso escuchamos el evento en lugar de leer el hash manualmente.
+  // Supabase v2 a veces procesa el hash antes de montar el componente
+  // y otras veces después. Cubrimos ambos casos:
 
+  // CASO 1: Leer el hash directamente y establecer la sesión nosotros
+  const hash         = window.location.hash.substring(1)
+  const params       = new URLSearchParams(hash)
+  const accessToken  = params.get('access_token')
+  const refreshToken = params.get('refresh_token') || ''
+  const type         = params.get('type')
+
+  if (accessToken && ['invite', 'recovery', 'signup'].includes(type)) {
+    supabase.auth
+      .setSession({ access_token: accessToken, refresh_token: refreshToken })
+      .then(({ data, error: err }) => {
+        if (err || !data.session) {
+          setEstado(ESTADOS.ERROR)
+        } else {
+          // Limpiar el hash de la URL sin recargar la página
+          window.history.replaceState(null, '', window.location.pathname)
+          setEstado(ESTADOS.FORM)
+        }
+      })
+    return
+  }
+
+  // CASO 2: Supabase ya procesó el hash, escuchar el evento
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-      if (session) {
-        setEstado(ESTADOS.FORM)
-      } else {
-        setEstado(ESTADOS.ERROR)
-      }
+      setEstado(session ? ESTADOS.FORM : ESTADOS.ERROR)
     }
   })
 
-  // Fallback: si el cliente ya procesó el token antes de montar el componente
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-      setEstado(prev => prev === ESTADOS.LOADING ? ESTADOS.FORM : prev)
-    }
-  })
-
-  // Timeout de seguridad: si en 8s no llega nada → error
+  // Timeout: si en 6s no llega nada, el enlace es inválido
   const timeout = setTimeout(() => {
     setEstado(prev => prev === ESTADOS.LOADING ? ESTADOS.ERROR : prev)
-  }, 8000)
+  }, 6000)
 
   return () => {
     subscription.unsubscribe()
