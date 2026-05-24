@@ -111,7 +111,7 @@ export default function Preview({ form, control, imgs, extras, esEstandar }) {
       </div>
 
       {/* Reporte */}
-      <div className="bg-white border border-border rounded-card shadow-card overflow-hidden w{70%} m-{0 auto}">
+      <div className="bg-white border border-border rounded-card shadow-card overflow-hidden w-[70%] mx-auto">
         <div ref={previewRef} className="font-sans bg-white text-ink text-[13px]">
 
           {/* Header reporte */}
