@@ -65,14 +65,16 @@ export function AuthProvider({ children }) {
       } else {
         setOperador(null)
         setNecesitaRegistro(false)
-        navigate('/login')        // ← redirige al hacer signOut
       }
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  const cerrarSesion = async () => await supabase.auth.signOut()
+  const cerrarSesion = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
 
   return (
     <AuthContext.Provider value={{
