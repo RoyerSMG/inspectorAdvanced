@@ -14,33 +14,37 @@ export default function ResetPassword() {
   const [loading,   setLoading]   = useState(false)
 
   useEffect(() => {
-    // Leer token del hash de la URL
-    const hash   = window.location.hash.substring(1)
-    const params = new URLSearchParams(hash)
-    const accessToken  = params.get('access_token')
-    const refreshToken = params.get('refresh_token') || ''
-    const type         = params.get('type')
+  // Supabase v2 intercepta el token del hash automáticamente y dispara
+  // onAuthStateChange ANTES de que podamos leer window.location.hash.
+  // Por eso escuchamos el evento en lugar de leer el hash manualmente.
 
-    if (!accessToken || !['invite', 'recovery'].includes(type)) {
-      setEstado(ESTADOS.ERROR)
-      return
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+      if (session) {
+        setEstado(ESTADOS.FORM)
+      } else {
+        setEstado(ESTADOS.ERROR)
+      }
     }
-
-
-  supabase.auth.setSession({
-    access_token: accessToken,
-    refresh_token: refreshToken
   })
-  .then(async ({ error: err }) => {
 
-    if (err) {
-      setEstado(ESTADOS.ERROR)
-      return
+  // Fallback: si el cliente ya procesó el token antes de montar el componente
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      setEstado(prev => prev === ESTADOS.LOADING ? ESTADOS.FORM : prev)
     }
-
-    setEstado(ESTADOS.FORM)
   })
-  },[])
+
+  // Timeout de seguridad: si en 8s no llega nada → error
+  const timeout = setTimeout(() => {
+    setEstado(prev => prev === ESTADOS.LOADING ? ESTADOS.ERROR : prev)
+  }, 8000)
+
+  return () => {
+    subscription.unsubscribe()
+    clearTimeout(timeout)
+  }
+}, [])
 
   const guardarPassword = async () => {
     setError('')
