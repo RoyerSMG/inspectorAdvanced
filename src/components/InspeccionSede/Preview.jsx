@@ -122,8 +122,8 @@ export default function Preview({ form, control, imgs, extras, esEstandar }) {
               <span className="text-white/50 text-[10px] tracking-wide">Centro Control Monitoreo</span>
             </div>
             <div className="text-right">
-              <strong className="text-white font-extrabold text-[18px] block">
-                sede {form.nombreSede || 'nombre sede'}
+              <strong className="text-white font-extrabold text-[18px] block uppercase">
+              SEDE {form.nombreSede || 'nombre sede'}
               </strong>
             </div>
           </div>
