@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import logoBrinks from '../../assets/BRKLogo.png'
 
 const NAV_GROUPS = [
   {
@@ -48,7 +49,7 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <img src="/BRKLogo.png" alt="Brinks" className="h-[120px] object-contain" />
+        <img src={logoBrinks} alt="Brinks" className="h-[120px] object-contain" />
         <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '10px', letterSpacing: '1px', marginTop: '8px', textTransform: 'uppercase' }}>
           Inspector Routes
         </p>

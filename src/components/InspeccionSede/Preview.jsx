@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useToast } from '../../hooks/useToast'
 import Toast from '../ui/Toast'
 import { toBlob, toPng } from 'html-to-image'
+import logoBrinks from '../../assets/BRKLogo.png'
 
 const TIPOS = {
   '1':'Verifica Alerta','2':'Norma CRS','3':'Riesgo Crítico',
@@ -147,7 +148,7 @@ export default function Preview({ form, control, imgs, extras, esEstandar }) {
           {/* Header reporte */}
           <div className="bg-ink px-5 py-3.5 flex items-center gap-3.5 border-b-4 border-accent1 rounded-tl-lg rounded-tr-lg">
             <div className="w-[60px] h-[40px] grid place-items-center flex-shrink-0
-                            font-extrabold text-sm text-white"><img src="/BRKLogo.png" alt="" className="w-full h-full object-contain block"/></div>
+                            font-extrabold text-sm text-white"><img src={logoBrinks} alt="Brinks Logo" className="w-full h-full object-contain block"/></div>
             <div className="flex-1">
               <strong className="text-white text-[15px] font-extrabold block">BRINKS DE COLOMBIA</strong>
               <span className="text-white/50 text-[10px] tracking-wide">Centro Control Monitoreo</span>

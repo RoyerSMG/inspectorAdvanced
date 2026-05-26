@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import logoBrinks from '../assets/logo_brk.png'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ export default function Login() {
       <div className="bg-card rounded-[20px] p-8 w-full max-w-md shadow-[0_24px_64px_rgba(0,0,0,0.35)]">
         {/* Brand */}
         <div className="flex flex-col items-center gap-2 mb-6 text-center">
-          <img src="/logo_brk.png" alt="Brinks Logo" className=" h-[150px] object-contain" />
+          <img src={logoBrinks} alt="Brinks Logo" className=" h-[150px] object-contain" />
           <h1 className="text-[1.4rem] font-extrabold text-ink">Inspector Routes</h1>
           <p className="text-[0.82rem] text-muted">Centro Control Monitoreo</p>
         </div>
