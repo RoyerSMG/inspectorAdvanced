@@ -9,12 +9,7 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-4">
 
         {/* Logo */}
-        <div className="w-9 h-9 bg-accent1 rounded-full grid place-items-center flex-shrink-0">
-          <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
-
+        <img src="/BRKLogo.png" alt="Brinks Logo" className=" h-[40px] object-contain" />
         <h1 className="text-white font-extrabold text-lg">Inspector Routes</h1>
 
         <nav className="ml-auto flex items-center gap-3">

@@ -1,4 +1,4 @@
-export default function Toggle({ checked, onChange, labelOn = 'Con Novedad', labelOff = 'Sin Novedad' }) {
+export default function Toggle({ checked, onChange, labelOn = 'Sin Novedad', labelOff = 'Con Novedad' }) {
   return (
     <div className="flex items-center gap-2">
       <div

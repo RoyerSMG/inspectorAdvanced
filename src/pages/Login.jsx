@@ -24,29 +24,24 @@ export default function Login() {
     const { error: err } = await supabase.auth.signInWithPassword({ email: correo, password })
     setLoading(false)
 
-    if (err) { setError('Credenciales incorrectas. Verifica tu correo y contraseña.'); return }
+    if (err) { setError('Ups! Credenciales incorrectas o cuenta inactiva.'); return }
     navigate('/inspeccion-sede', { replace: true })
   }
 
   return (
     <div className="min-h-screen gradient-brand flex items-center justify-center p-6">
-      <div className="bg-card rounded-[20px] p-12 w-full max-w-md shadow-[0_24px_64px_rgba(0,0,0,0.35)]">
-
+      <div className="bg-card rounded-[20px] p-8 w-full max-w-md shadow-[0_24px_64px_rgba(0,0,0,0.35)]">
         {/* Brand */}
-        <div className="flex flex-col items-center gap-3 mb-9 text-center">
-          <div className="w-14 h-14 gradient-main rounded-full grid place-items-center shadow-[0_6px_20px_rgba(0,119,182,0.4)]">
-            <svg className="w-7 h-7 fill-white" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-          </div>
+        <div className="flex flex-col items-center gap-2 mb-6 text-center">
+          <img src="/logo_brk.png" alt="Brinks Logo" className=" h-[150px] object-contain" />
           <h1 className="text-[1.4rem] font-extrabold text-ink">Inspector Routes</h1>
-          <p className="text-[0.82rem] text-muted">Brinks de Colombia — Centro Control Monitoreo</p>
+          <p className="text-[0.82rem] text-muted">Centro Control Monitoreo</p>
         </div>
 
         {/* Error */}
         {error && (
           <div className="bg-red-50 border border-red-300 text-red-700 text-[0.82rem] font-semibold
-                          px-4 py-2.5 rounded-btn mb-4">
+                          px-4 py-2.5 rounded-btn mb-4 text-center">
             {error}
           </div>
         )}
@@ -97,10 +92,6 @@ export default function Login() {
           {loading && <div className="spinner" />}
           Ingresar
         </button>
-
-        <p className="text-center mt-7 text-[0.75rem] text-muted">
-          Acceso restringido — Solo personal autorizado Brinks
-        </p>
       </div>
     </div>
   )
